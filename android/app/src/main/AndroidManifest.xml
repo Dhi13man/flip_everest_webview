@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dhi13man.flip_everest">
    <application
-        android:label="Flip Everest"
+        android:label="Green Everest"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
