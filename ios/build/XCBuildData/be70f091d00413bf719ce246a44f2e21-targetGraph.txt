@@ -1,0 +1,17 @@
+Target dependency graph (7 targets)
+Flutter in Pods
+OneSignal in Pods
+OneSignalXCFramework in Pods
+Pods-OneSignalNotificationServiceExtension in Pods, depends on:
+OneSignal in Pods (explicit)
+onesignal_flutter in Pods, depends on:
+Flutter in Pods (explicit)
+OneSignalXCFramework in Pods (explicit)
+webview_flutter in Pods, depends on:
+Flutter in Pods (explicit)
+Pods-Runner in Pods, depends on:
+Flutter in Pods (explicit)
+OneSignal in Pods (explicit)
+OneSignalXCFramework in Pods (explicit)
+onesignal_flutter in Pods (explicit)
+webview_flutter in Pods (explicit)
