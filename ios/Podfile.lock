@@ -1,0 +1,39 @@
+PODS:
+  - Flutter (1.0.0)
+  - OneSignal (3.5.3)
+  - onesignal_flutter (3.0.0):
+    - Flutter
+    - OneSignalXCFramework (= 3.4.4)
+  - OneSignalXCFramework (3.4.4)
+  - webview_flutter (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - OneSignal (< 4.0, >= 3.0.0)
+  - onesignal_flutter (from `.symlinks/plugins/onesignal_flutter/ios`)
+  - webview_flutter (from `.symlinks/plugins/webview_flutter/ios`)
+
+SPEC REPOS:
+  trunk:
+    - OneSignal
+    - OneSignalXCFramework
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  onesignal_flutter:
+    :path: ".symlinks/plugins/onesignal_flutter/ios"
+  webview_flutter:
+    :path: ".symlinks/plugins/webview_flutter/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 434fef37c0980e73bb6479ef766c45957d4b510c
+  OneSignal: e12773ef3dfc68f42103c8cd28ad50660209528f
+  onesignal_flutter: 6a582e3051074be6d9d129002a93a3bfd04a5b88
+  OneSignalXCFramework: eaf286b7438aa1f030f03e5fa9f1c79ede5d8f04
+  webview_flutter: 3603125dfd3bcbc9d8d418c3f80aeecf331c068b
+
+PODFILE CHECKSUM: e1ce3625e62df025b3e64f8999a17f72687b00ad
+
+COCOAPODS: 1.10.1
