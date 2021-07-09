@@ -91,29 +91,43 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
             },
           ),
           if (isWebViewLoading)
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    height: 60,
-                    width: 60,
-                    margin: const EdgeInsets.all(30),
-                    child: const CircularProgressIndicator(
-                      color: stackItemsColor,
-                    ),
-                  ),
-                  const Text(
-                    'Loading...',
-                    style: TextStyle(
-                      color: stackItemsColor,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+            const LoadingItems(stackItemsColor: stackItemsColor),
+        ],
+      ),
+    );
+  }
+}
+
+class LoadingItems extends StatelessWidget {
+  const LoadingItems({
+    Key? key,
+    required this.stackItemsColor,
+  }) : super(key: key);
+
+  final Color stackItemsColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          Container(
+            height: 60,
+            width: 60,
+            margin: const EdgeInsets.all(30),
+            child: CircularProgressIndicator(
+              color: stackItemsColor,
             ),
+          ),
+          Text(
+            'Loading...',
+            style: TextStyle(
+              color: stackItemsColor,
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
