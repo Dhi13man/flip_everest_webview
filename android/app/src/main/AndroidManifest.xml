@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.dhi13man.flip_everest">
    <application
-        android:label="Green Everest"
+        android:label="Flip Everest"
         android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -41,6 +41,9 @@
                 <data android:scheme="http" android:host="flipeverest.com" />
                 <data android:scheme="https" android:host="flipeverest.com" />
             </intent-filter>
+            <!-- Notification Default icon -->
+            <meta-data android:name="com.onesignal.messaging.default_notification_icon"
+            android:resource="@drawable/ic_stat_onesignal_default" />
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
