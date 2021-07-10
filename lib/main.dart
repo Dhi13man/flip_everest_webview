@@ -57,7 +57,7 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
         (bool wasPermissionGiven) {
           if (!wasPermissionGiven)
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Notification permission not given!')),
+              SnackBar(content: const Text('Notification permission not given!')),
             );
         },
       );
@@ -119,17 +119,12 @@ class LoadingItems extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(30),
             child: Image(
+              height: 150,
+              width: 250,
               image: AssetImage('assets/logobg.png')
             ),
           ),
-          Text(
-            'Loading...',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 23,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          CircularProgressIndicator(color: Colors.white),
         ],
       ),
     );

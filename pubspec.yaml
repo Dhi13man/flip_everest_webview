@@ -95,8 +95,7 @@ flutter_native_splash:
   #background_image: "assets/background.png"
 
   # The image parameter allows you to specify an image used in the splash screen.  It must be a 
-  # png file.  
-  image: assets/logobg.png
+  # png file.
 
   # The android, ios and web parameters can be used to disable generating a splash screen on a given 
   # platform.
