@@ -71,8 +71,9 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
 
   @override
   Widget build(BuildContext context) {
-    const Color stackItemsColor = Color(0xFF2ADAAE);
+    const Color stackItemsColor = Color(0xFF02ACB0);
     return Scaffold(
+      backgroundColor: stackItemsColor,
       body: Stack(
         children: <Widget>[
           WebView(
@@ -91,7 +92,7 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
             },
           ),
           if (isWebViewLoading)
-            const LoadingItems(stackItemsColor: stackItemsColor),
+            const LoadingItems(loadingScreenBackgroundColor: stackItemsColor),
         ],
       ),
     );
@@ -99,31 +100,32 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
 }
 
 class LoadingItems extends StatelessWidget {
-  const LoadingItems({
-    Key? key,
-    required this.stackItemsColor,
-  }) : super(key: key);
+  const LoadingItems({Key? key, required this.loadingScreenBackgroundColor})
+      : super(key: key);
 
-  final Color stackItemsColor;
+  final Color loadingScreenBackgroundColor;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
+    final Size screenSize = MediaQuery.of(context).size;
+    return Container(
+      height: screenSize.height,
+      width: screenSize.width,
+      alignment: Alignment.center,
+      color: loadingScreenBackgroundColor,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            height: 60,
-            width: 60,
-            margin: const EdgeInsets.all(30),
-            child: CircularProgressIndicator(
-              color: stackItemsColor,
+        children: const <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(30),
+            child: Image(
+              image: AssetImage('assets/logobg.png')
             ),
           ),
           Text(
             'Loading...',
             style: TextStyle(
-              color: stackItemsColor,
+              color: Colors.white,
               fontSize: 23,
               fontWeight: FontWeight.bold,
             ),
