@@ -4,14 +4,21 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 import 'package:flip_everest/main.dart';
 
+/// Class having methods to handle all the OneSignal Functionality
+/// listening to all Notification triggers in the background with callbacks.
+/// 
+/// Pass in the OneSignal [appID]
 class NotificationHandler {
   NotificationHandler({required String appID}) {
     OneSignal.shared.setAppId(appID);
   }
 
+  /// Gets Location permission from Users on IoS if not already given
   Future<bool> getPermission() async =>
       await OneSignal.shared.promptUserForPushNotificationPermission();
 
+  /// Establishes all the background notification callbacks 
+  /// telling app how to react.
   void establishCallbacks(BuildContext context) {
     OneSignal.shared.setNotificationWillShowInForegroundHandler(
         (OSNotificationReceivedEvent notification) {
@@ -19,6 +26,7 @@ class NotificationHandler {
       // Display Notification, pass null param for not displaying the notification
     });
 
+    // Called when Notification opened by user.
     OneSignal.shared.setNotificationOpenedHandler(
       (OSNotificationOpenedResult result) {
         final String postURL = result.notification.additionalData?['url'] ?? '';
@@ -32,6 +40,8 @@ class NotificationHandler {
       },
     );
 
+    // Called any time Notification permission status changes 
+    //(relevant only for iPhones)
     OneSignal.shared.setPermissionObserver(
       (OSPermissionStateChanges changes) {
         // Will be called whenever the permission changes
