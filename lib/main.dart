@@ -5,6 +5,7 @@ import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 import 'package:flip_everest/notification_handler.dart';
+import 'package:flip_everest/loading_screen.dart';
 
 const String homePageURL = 'https://flipeverest.com';
 
@@ -44,11 +45,17 @@ class WebViewAppPage extends StatefulWidget {
 }
 
 class _WebViewAppPageState extends State<WebViewAppPage> {
+  /// Manages Webview
+  late WebViewController webViewController;
+
   /// Initially True. Will become false once the first page of Webview is ready.
   late bool isWebViewLoading;
 
   /// Initally True. True every time any page is loading.
   late bool isPageLoading;
+
+  /// True when error occurs. False otherwise
+  late bool errorOccured;
 
   /// Handles OneSignal functioanlity
   late NotificationHandler notificationHandler;
@@ -66,7 +73,8 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
             if (!wasPermissionGiven)
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: const Text('Notification permission not given!')),
+                  content: const Text('Notification permission not given!'),
+                ),
               );
           },
         );
@@ -77,21 +85,33 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
     isWebViewLoading = true;
     isPageLoading = true;
+    errorOccured = false;
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     const Color stackItemsColor = Color(0xFF02ACB0);
+    print(errorOccured);
     return Scaffold(
       backgroundColor: stackItemsColor,
       body: Stack(
+        alignment: Alignment.center,
         children: <Widget>[
           WebView(
             javascriptMode: JavascriptMode.unrestricted,
             allowsInlineMediaPlayback: true,
             initialUrl: widget.webviewURL,
-            onPageStarted: (String url) => setState(() => isPageLoading = true),
+            onPageStarted: (String url) => setState(
+              () {
+                isPageLoading = true;
+                errorOccured = false;
+              },
+            ),
+            onWebViewCreated: (WebViewController c) {
+              webViewController = c;
+              errorOccured = false;
+            },
             onPageFinished: (String url) => setState(
               () {
                 isWebViewLoading = false;
@@ -100,12 +120,19 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
             ),
             onWebResourceError: (WebResourceError error) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('URL load failed: ${error.failingUrl}')),
+                SnackBar(
+                  content: Text(
+                    'URL load failed: ${error.failingUrl}',
+                    style: const TextStyle(fontWeight: FontWeight.w600),
+                  ),
+                  backgroundColor: stackItemsColor,
+                ),
               );
               setState(
                 () {
                   isWebViewLoading = false;
                   isPageLoading = false;
+                  errorOccured = true;
                 },
               );
             },
@@ -114,40 +141,60 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
             const Center(
               child: CircularProgressIndicator(color: stackItemsColor),
             ),
+          if (errorOccured)
+            PageButtons(
+              buttonColor: stackItemsColor,
+              webViewController: webViewController,
+            ),
           if (isWebViewLoading)
-            const LoadingItems(loadingScreenBackgroundColor: stackItemsColor),
+            const LoadingScreen(loadingScreenBackgroundColor: stackItemsColor),
         ],
       ),
     );
   }
 }
 
-/// Items shown in initial Loading screen with logo.
-class LoadingItems extends StatelessWidget {
-  const LoadingItems({Key? key, required this.loadingScreenBackgroundColor})
-      : super(key: key);
+/// Page Buttons that show up only when there is an Error in loading Webview.
+/// 
+/// When there is no error, the Web App itself can be used for navigation
+/// so these are not needed. Pass in the [webViewController] and [buttonColor].
+class PageButtons extends StatelessWidget {
+  const PageButtons({
+    Key? key,
+    required this.buttonColor,
+    required this.webViewController,
+  }) : super(key: key);
 
-  final Color loadingScreenBackgroundColor;
+  final Color buttonColor;
+  final WebViewController webViewController;
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    return Container(
-      height: screenSize.height,
-      width: screenSize.width,
-      alignment: Alignment.center,
-      color: loadingScreenBackgroundColor,
+    return Positioned(
+      bottom: 50,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: const <Widget>[
-          Padding(
-            padding: const EdgeInsets.all(30),
-            child: Image(
-                height: 150,
-                width: 250,
-                image: AssetImage('assets/logobg.png')),
+        children: <Widget>[
+          ElevatedButton.icon(
+            icon: const Icon(Icons.refresh),
+            label: const Text('Reload'),
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(buttonColor),
+            ),
+            onPressed: () => webViewController.reload(),
           ),
-          CircularProgressIndicator(color: Colors.white),
+          ElevatedButton.icon(
+            icon: const Icon(Icons.arrow_back_rounded),
+            label: const Text('Back'),
+            style: ButtonStyle(
+              backgroundColor:
+                  MaterialStateProperty.all<Color>(buttonColor),
+              padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                const EdgeInsets.symmetric(horizontal: 20),
+              ),
+            ),
+            onPressed: () => webViewController.goBack(),
+          ),
         ],
       ),
     );
