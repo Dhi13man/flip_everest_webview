@@ -19,11 +19,11 @@ A OneSignal Notification Handler `NotificationHandler` is also provided, which h
 
 | Loading Screen | WebView Screen |
 |:---:|:---:|
-| ![Loading Screen](https://raw.githubusercontent.com/dhi13man/flip_everest/master/screenshots/LoadingScreen.png) | ![WebView Screen](https://raw.githubusercontent.com/dhi13man/flip_everest/master/screenshots/WebView.png) |
+| ![Loading Screen](https://raw.githubusercontent.com/dhi13man/flip_everest_webview/main/screenshots/LoadingScreen.jpg) | ![WebView Screen](https://raw.githubusercontent.com/dhi13man/flip_everest_webview/main/screenshots/WebView.jpg) |
 
 | Push Notifications |
 |:---:|
-| ![Push Notifications](https://raw.githubusercontent.com/dhi13man/flip_everest/master/screenshots/PushNotification.png) |
+| ![Push Notifications](https://raw.githubusercontent.com/dhi13man/flip_everest_webview/main/screenshots/PushNotification.jpg) |
 
 ### Dependencies
 
