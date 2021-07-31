@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import 'package:flip_everest/main.dart';
+import 'package:flip_everest/views/app_webview.dart';
 
 /// Class having methods to handle all the OneSignal Functionality
 /// listening to all Notification triggers in the background with callbacks.

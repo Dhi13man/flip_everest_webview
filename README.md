@@ -1,6 +1,6 @@
 # flip_everest
 
-A new Flutter project.
+Flutter Cross-Platform Webview Application made for a client, with custom Splash Screen, App Logo, and OneSignal Push Notifications. 
 
 ## Getting Started
 
