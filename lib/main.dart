@@ -1,8 +1,17 @@
+import 'package:flip_everest/view/screens/web_fallback_screen.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flip_everest/view/screens/app_webview.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 
-void main() => runApp(const WebViewApp());
+void main() {
+  final WidgetsBinding widgetsBinding =
+      WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  runApp(const WebViewApp());
+  FlutterNativeSplash.remove();
+}
 
 /// Main App that runs the WebView.
 class WebViewApp extends StatelessWidget {
@@ -19,21 +28,30 @@ class WebViewApp extends StatelessWidget {
       onGenerateRoute: (settings) {
         // Put other routes (if any) above this if condition
         // Deep Linking here if valid route
-        if (Uri.tryParse(_homePageURL + (settings.name ?? '')) != null)
+        if (Uri.tryParse(_homePageURL + (settings.name ?? '')) != null) {
           return MaterialPageRoute(
             builder: (context) => WebViewAppPage(
               webviewURL: _homePageURL + (settings.name ?? ''),
             ),
           );
-
+        }
         // Invalid route, return Home Page.
-        else
+        else {
           return MaterialPageRoute(
-            builder: (context) =>
-                const WebViewAppPage(webviewURL: _homePageURL),
+            builder: (context) => _getHomeWidget(),
           );
+        }
       },
-      home: const WebViewAppPage(webviewURL: _homePageURL),
+      home: _getHomeWidget(),
     );
+  }
+
+  Widget _getHomeWidget() {
+    return kIsWeb
+        ? const WebFallbackScreen(
+            homePageURL: _homePageURL,
+            backgroundColor: Colors.deepPurple,
+          )
+        : const WebViewAppPage(webviewURL: _homePageURL);
   }
 }

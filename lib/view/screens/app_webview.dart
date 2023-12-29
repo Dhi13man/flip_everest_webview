@@ -1,14 +1,10 @@
 import 'dart:io';
 
-import 'package:flip_everest/controller/webview/webview_controller.dart';
-import 'package:flip_everest/services/notification_handler.dart';
+import 'package:flip_everest/business/utils/webview/webview_controller.dart';
+import 'package:flip_everest/business/utils/notifications/notification_handler.dart';
 import 'package:flip_everest/view/components/page_buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-// Import for Android features.
-import 'package:webview_flutter_android/webview_flutter_android.dart';
-// Import for iOS features.
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 
 import 'package:flip_everest/view/screens/loading_screen.dart';
 
@@ -27,6 +23,9 @@ class WebViewAppPage extends StatefulWidget {
 class _WebViewAppPageState extends State<WebViewAppPage> {
   static const Color stackItemsColor = Color(0xFF02ACB0);
 
+  /// The Webview controller for the Webview.
+  late WebViewController webviewController;
+
   /// Initially True. Will become false once the first page of Webview is ready.
   late bool isWebViewLoading;
 
@@ -41,61 +40,28 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
 
   @override
   void initState() {
+    super.initState();
+
     // OneSignal Service Setup
-    if (Platform.isAndroid || Platform.isIOS) {
-      notificationHandler = NotificationHandler(appID: 'ONESIGNAL_APP_ID');
-      if (!Platform.isAndroid)
-        notificationHandler.getPermission().then(
-          (bool wasPermissionGiven) {
-            if (!wasPermissionGiven)
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: const Text('Notification permission not given!'),
-                ),
-              );
-          },
-        );
-      notificationHandler.establishCallbacks(context);
-    }
-    
-    // Create Platform specific Webview creation params.
-    late final PlatformWebViewControllerCreationParams params;
-    if (WebViewPlatform.instance is WebKitWebViewPlatform) {
-      params = WebKitWebViewControllerCreationParams(
-        allowsInlineMediaPlayback: true,
-        mediaTypesRequiringUserAction: const <PlaybackMediaTypes>{},
-      );
-    } else {
-      params = const PlatformWebViewControllerCreationParams();
-    }
+    _registerNotificationHandler();
 
     // Create WebViewController from the Platform specific creation params.
-    final WebViewController controller =
-        WebViewController.fromPlatformCreationParams(params);
-    if (controller.platform is AndroidWebViewController) {
-      final AndroidWebViewController androidController =
-          controller.platform as AndroidWebViewController;
-      AndroidWebViewController.enableDebugging(true);
-      androidController.setMediaPlaybackRequiresUserGesture(false);
-    }
+    webviewController = _bindWebViewControllerToState(stackItemsColor);
 
     // WebView initial states.
     isWebViewLoading = true;
     isPageLoading = true;
     errorOccured = false;
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    final WebViewController controller =
-        createWebviewController(context, stackItemsColor);
     return Scaffold(
       backgroundColor: stackItemsColor,
       body: Stack(
         alignment: Alignment.center,
         children: <Widget>[
-          WebViewWidget(controller: controller),
+          WebViewWidget(controller: webviewController),
           if (isPageLoading)
             const Center(
               child: CircularProgressIndicator(color: stackItemsColor),
@@ -103,7 +69,7 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
           if (errorOccured)
             PageButtons(
               buttonColor: stackItemsColor,
-              webViewController: controller,
+              webViewController: webviewController,
             ),
           if (isWebViewLoading)
             const LoadingScreen(loadingScreenBackgroundColor: stackItemsColor),
@@ -112,11 +78,26 @@ class _WebViewAppPageState extends State<WebViewAppPage> {
     );
   }
 
-  CustomWebviewController createWebviewController(
-    BuildContext context,
-    Color stackItemsColor,
-  ) {
-    return CustomWebviewController(
+  void _registerNotificationHandler() {
+    notificationHandler = NotificationHandler(appID: 'ONESIGNAL_APP_ID');
+    if (!Platform.isAndroid)
+      notificationHandler.getPermission().then(
+        (bool wasPermissionGiven) {
+          if (wasPermissionGiven) {
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: const Text('Notification permission not given!'),
+            ),
+          );
+        },
+      );
+    notificationHandler.establishCallbacks(context);
+  }
+
+  WebViewController _bindWebViewControllerToState(Color stackItemsColor) {
+    return createWebViewController(
       webviewURL: widget.webviewURL,
       onPageStarted: (String url) => setState(
         () {

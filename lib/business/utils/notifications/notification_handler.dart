@@ -8,25 +8,26 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 /// Pass in the OneSignal [appID]
 class NotificationHandler {
   NotificationHandler({required String appID}) {
-    OneSignal.shared.setAppId(appID);
+    OneSignal.initialize(appID);
   }
 
   /// Gets Location permission from Users on IoS if not already given
   Future<bool> getPermission() async =>
-      await OneSignal.shared.promptUserForPushNotificationPermission();
+      await OneSignal.Notifications.requestPermission(true);
 
-  /// Establishes all the background notification callbacks
-  /// telling app how to react.
+  /// Establishes all the background notification callbacks telling app how to
+  /// react.
   void establishCallbacks(BuildContext context) {
-    OneSignal.shared.setNotificationWillShowInForegroundHandler(
-        (OSNotificationReceivedEvent notification) {
-      // Will be called whenever a notification is received in foreground
-      // Display Notification, pass null param for not displaying the notification
-    });
+    OneSignal.Notifications.addForegroundWillDisplayListener(
+      (OSNotificationWillDisplayEvent notification) {
+        // Will be called whenever a notification is received in foreground
+        // Display Notification, pass null param for not displaying the notification
+      },
+    );
 
     // Called when Notification opened by user.
-    OneSignal.shared.setNotificationOpenedHandler(
-      (OSNotificationOpenedResult result) {
+    OneSignal.Notifications.addClickListener(
+      (OSNotificationClickEvent result) {
         final String postURL = result.notification.additionalData?['url'] ?? '';
         // Will be called whenever a notification is opened/button pressed.
         if (Uri.tryParse(postURL) != null)
@@ -39,23 +40,25 @@ class NotificationHandler {
     );
 
     // Called any time Notification permission status changes
-    //(relevant only for iPhones)
-    OneSignal.shared.setPermissionObserver(
-      (OSPermissionStateChanges changes) {
+    // (relevant only for iPhones)
+    OneSignal.Notifications.addPermissionObserver(
+      (bool permissionState) {
         // Will be called whenever the permission changes
         // (ie. user taps Allow on the permission prompt in iOS)
-        if (changes.to.status == OSNotificationPermission.denied ||
-            changes.to.status == OSNotificationPermission.notDetermined)
-          getPermission().then(
-            (bool wasPermissionGiven) {
-              if (!wasPermissionGiven)
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: const Text('Notification permission not given!'),
-                  ),
-                );
-            },
-          );
+        if (permissionState) {
+          return;
+        }
+
+        OneSignal.Notifications.requestPermission(true).then(
+          (bool wasPermissionGiven) {
+            if (!wasPermissionGiven)
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text('Notification permission not given!'),
+                ),
+              );
+          },
+        );
       },
     );
   }
