@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 /// Items shown in initial Loading screen with logo.

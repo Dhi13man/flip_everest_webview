@@ -24,13 +24,13 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  webview_flutter: ^2.0.9
-  onesignal_flutter: ^3.0.0
+  webview_flutter: ^4.4.2
+  onesignal_flutter: ^5.0.4
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_native_splash: ^1.2.0
+  flutter_native_splash: ^2.3.8
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

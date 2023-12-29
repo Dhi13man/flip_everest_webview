@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flip_everest/views/app_webview.dart';
+import 'package:flip_everest/view/screens/app_webview.dart';
 
 void main() => runApp(const WebViewApp());
 
@@ -27,9 +27,11 @@ class WebViewApp extends StatelessWidget {
           );
 
         // Invalid route, return Home Page.
-        else return MaterialPageRoute(
-          builder: (context) => const WebViewAppPage(webviewURL: _homePageURL),
-        );
+        else
+          return MaterialPageRoute(
+            builder: (context) =>
+                const WebViewAppPage(webviewURL: _homePageURL),
+          );
       },
       home: const WebViewAppPage(webviewURL: _homePageURL),
     );

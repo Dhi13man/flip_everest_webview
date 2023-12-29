@@ -1,12 +1,10 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flip_everest/view/screens/app_webview.dart';
 import 'package:flutter/material.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-import 'package:flip_everest/views/app_webview.dart';
-
 /// Class having methods to handle all the OneSignal Functionality
 /// listening to all Notification triggers in the background with callbacks.
-/// 
+///
 /// Pass in the OneSignal [appID]
 class NotificationHandler {
   NotificationHandler({required String appID}) {
@@ -17,7 +15,7 @@ class NotificationHandler {
   Future<bool> getPermission() async =>
       await OneSignal.shared.promptUserForPushNotificationPermission();
 
-  /// Establishes all the background notification callbacks 
+  /// Establishes all the background notification callbacks
   /// telling app how to react.
   void establishCallbacks(BuildContext context) {
     OneSignal.shared.setNotificationWillShowInForegroundHandler(
@@ -40,7 +38,7 @@ class NotificationHandler {
       },
     );
 
-    // Called any time Notification permission status changes 
+    // Called any time Notification permission status changes
     //(relevant only for iPhones)
     OneSignal.shared.setPermissionObserver(
       (OSPermissionStateChanges changes) {
