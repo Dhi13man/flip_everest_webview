@@ -18,7 +18,7 @@ class WebViewApp extends StatelessWidget {
   const WebViewApp({Key? key}) : super(key: key);
 
   /// URL of the WebView App's Home Page.
-  static const String _homePageURL = 'https://flipeverest.com';
+  static const String _homePageURL = 'https://www.flipeverest.com/';
 
   @override
   Widget build(BuildContext context) {
